@@ -1,0 +1,52 @@
+from cdb.lib.fs import FileSystem
+from cdb.lib.properties import CheatProperty, VersionProperty, Color, colorize
+
+fs = FileSystem()
+
+
+def list_cheats(args: any) -> None:
+    all_cheats = fs.get_all_cheats()
+    for cheat in all_cheats:
+        # get properties
+        properties = fs.load_cheat_properties(cheat)
+        cp = CheatProperty()
+        cp.load(cheat, properties)
+
+        print(colorize(f"[{cp.id}] ", Color.CYAN)  + (cp.properties["description"] or ""))
+
+        # print all versions
+        for version in fs.get_all_versions(cheat):
+            properties = fs.load_cheat_version_properties(cheat, version)
+            vp = VersionProperty()
+            vp.load(cheat, version, properties)
+            detected = vp.properties["detected"]
+            print(
+                "\t"
+                + colorize(f"[{vp.version}] ", Color.GREEN if detected else Color.RED)
+                + (vp.properties["description"] or "")
+                + f" Filetype: {vp.properties['filetype']}"
+                + f" ({colorize('detected', Color.GREEN) if detected else colorize('undetected', Color.RED)})"
+            )
+        # get all versions
+
+
+def list_versions(args: any) -> None:
+    all_versions = fs.get_all_versions(args.id)
+    for version in all_versions:
+        properties = fs.load_cheat_version_properties(args.id, version)
+        vp = VersionProperty()
+        vp.load(args.id, version, properties)
+        detected = vp.properties["detected"]
+        print(
+            colorize(f"[{vp.version}] ", Color.GREEN if detected else Color.RED)
+            + (vp.properties["description"] or "")
+            + f" Filetype: {vp.properties['filetype']}"
+            + f" ({colorize('detected', Color.GREEN) if detected else colorize('undetected', Color.RED)})"
+        )
+
+
+def search(args: any) -> None:
+    if args.id:
+        list_versions(args)
+    else:
+        list_cheats(args)

@@ -1,3 +1,19 @@
+class Color:
+    # define console colors
+    RED = "\033[91m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    BLUE = "\033[94m"
+    PURPLE = "\033[95m"
+    CYAN = "\033[96m"
+    WHITE = "\033[97m"
+    RESET = "\033[0m"
+
+
+def colorize(string: str, color: str) -> str:
+    return color + string + Color.RESET
+
+
 class CheatProperty:
     def __init__(self, args: any = None) -> None:
         self.id = None
@@ -11,9 +27,9 @@ class CheatProperty:
         self.id = args.id
         self.properties = {"url": args.url, "description": args.description}
 
-    def __str__(self):
-        # TODO: return a string representation of the object
-        return print(self.id, self.properties)
+    def load(self, id: str, json_properties: any) -> None:
+        self.id = id
+        self.properties = json_properties
 
 
 class VersionProperty:
@@ -31,7 +47,7 @@ class VersionProperty:
         self.version = args.version
         self.properties = {
             "path": args.path,
-            "file-type": args.file_type,
+            "filetype": args.filetype,
             "arch": args.arch,
             "paid": args.paid and True or False,
             "free": args.free and True or False,
@@ -57,8 +73,8 @@ class VersionProperty:
         if args.undetected is True:
             self.properties["detected"] = False
             self.properties["undetected"] = True
-        if args.file_type is not None:
-            self.properties["file-type"] = args.file_type
+        if args.filetype is not None:
+            self.properties["filetype"] = args.filetype
         if args.arch is not None:
             self.properties["arch"] = args.arch
         if args.paid is True:

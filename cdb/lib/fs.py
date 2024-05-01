@@ -30,7 +30,8 @@ class FileSystem:
         self.cheat_dir = self.root + "{}"
         self.cheat_properties = self.root + "{}/properties.json"
         self.cheat_version_properties = self.root + "{}/versions/{}/properties.json"
-        self.cheat_version_dir = self.root + "{}/versions/{}"
+        self.cheat_version = self.root + "{}/versions/{}"
+        self.cheat_version_dir = self.root + "{}/versions"
         self.cheat_version_sample = self.root + "{}/versions/{}/sample"
         self.cheat_version_comments = self.root + "{}/versions/{}/comments.txt"
         # check if structure exists
@@ -42,9 +43,20 @@ class FileSystem:
         if not os.path.exists(self.cheat_dir.format(id)):
             raise FileNotFoundError("Cheat {} not found".format(id))
         # check if version exists
-        if not os.path.exists(self.cheat_version_dir.format(id, version)):
+        if not os.path.exists(self.cheat_version.format(id, version)):
             raise FileNotFoundError("Cheat {} version {} not found".format(id, version))
         return self.cheat_version_comments.format(id, version)
+
+    def get_properties_path(self, id: str, version: str = None) -> str:
+        if version is None:
+            return self.cheat_properties.format(id)
+        return self.cheat_version_properties.format(id, version)
+
+    def get_all_cheats(self) -> list:
+        return os.listdir(self.root)
+
+    def get_all_versions(self, id: str) -> list:
+        return os.listdir(self.cheat_version_dir.format(id))
 
     def load_cheat_properties(self, id: str) -> any:
         property_file = self.cheat_properties.format(id)
@@ -87,7 +99,7 @@ class FileSystem:
         cheat_dir = self.cheat_dir.format(id)
         if not os.path.exists(cheat_dir):
             raise FileNotFoundError("Cheat {} not found".format(id))
-        version_dir = self.cheat_version_dir.format(id, version)
+        version_dir = self.cheat_version.format(id, version)
         sample_dir = self.cheat_version_sample.format(id, version)
         if os.path.exists(version_dir):
             raise FileExistsError(
@@ -97,7 +109,8 @@ class FileSystem:
         self.save_cheat_version_properties(id, version, properties)
         # check if path is a file or directory
         if os.path.isfile(path):
-            shutil.copy(path, version_dir + "/sample/")
+            os.makedirs(sample_dir)
+            shutil.copy(path, sample_dir + "/")
         else:
             shutil.copytree(path, sample_dir)
 
@@ -111,7 +124,7 @@ class FileSystem:
         cheat_dir = self.cheat_dir.format(id)
         if not os.path.exists(cheat_dir):
             raise FileNotFoundError("Cheat {} not found".format(id))
-        version_dir = cheat_dir + "/versions/{}".format(version)
+        version_dir = self.cheat_version.format(id, version)
         if not os.path.exists(version_dir):
             raise FileNotFoundError("Cheat {} version {} not found".format(id, version))
         shutil.rmtree(version_dir)

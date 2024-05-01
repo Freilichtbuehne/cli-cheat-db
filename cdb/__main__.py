@@ -3,6 +3,8 @@ from cdb.actions.add import add
 from cdb.actions.new import new
 from cdb.actions.update import update
 from cdb.actions.comment import comment
+from cdb.actions.list import search
+from cdb.actions.delete import delete
 
 from cdb.lib.validators import ReValidator
 
@@ -31,7 +33,7 @@ def main():
     parser_new.add_argument("id", type=id_validator, help="Identifier for the cheat")
     parser_new.add_argument("version", type=version_validator, help="Identifier for this version of the cheat (e.g. v1)")
     parser_new.add_argument("path", type=str, help="Path to the file or directory to add")
-    parser_new.add_argument("--file-type", choices = [ "Lua", "DLL", "EXE" ], default = None, help="File type of the cheat")
+    parser_new.add_argument("--filetype", required=True, choices = [ "lua", "dll", "exe" ], default = None, help="File type of the cheat")
     parser_new.add_argument("--arch", choices = [ "64", "32", "any" ], default = "any", help="Architecture of the cheat")
     parser_new.add_argument("--paid", action='store_true', help="Cheats that require a subscription or payment")
     parser_new.add_argument("--free", action='store_true', help="Cheats that are free")
@@ -44,13 +46,13 @@ def main():
                                         add_help=False,
                                         description="The update parser",
                                         help="Update specific information of a cheat")
-    parser_update.add_argument("id", type=id_validator, help="Identifier for the cheat") # TODO regex
+    parser_update.add_argument("id", type=id_validator, help="Identifier for the cheat")
     parser_update.add_argument("version", type=version_validator, help="Identifier for this version of the cheat (e.g. v1)")
     parser_update.add_argument("--url", type=str, help="URL to the resource to download the cheat")
     parser_update.add_argument("--description", type=str, help="Description of the cheat")
     parser_update.add_argument("--undetected", action='store_true', help="Cheat is detected")
     parser_update.add_argument("--detected", action='store_true', help="Cheat is undetected")
-    parser_update.add_argument("--file-type", choices = [ "Lua", "DLL", "EXE" ], default = None, help="File type of the cheat")
+    parser_update.add_argument("--filetype", choices = [ "lua", "dll", "exe" ], default = None, help="File type of the cheat")
     parser_update.add_argument("--arch", choices = [ "64", "32", "any" ], default = "any", help="Architecture of the cheat")
     parser_update.add_argument("--paid", action='store_true', help="Cheats that require a subscription or payment")
     parser_update.add_argument("--free", action='store_true', help="Cheats that are free")
@@ -59,8 +61,8 @@ def main():
                                         add_help=False,
                                         description="Add a comment to a sample",
                                         help="Add a comment to a sample")
-    parser_comment.add_argument("id", type=id_validator, help="Identifier for the cheat") # TODO regex
-    parser_comment.add_argument("version", type=version_validator, help="Identifier for this version of the cheat") # TODO regex
+    parser_comment.add_argument("id", type=id_validator, help="Identifier for the cheat")
+    parser_comment.add_argument("version", type=version_validator, help="Identifier for this version of the cheat")
 
 
     parsers_list = subparsers.add_parser("list",
@@ -70,6 +72,14 @@ def main():
     parsers_list.add_argument("--id", type=id_validator, help="Identifier for the cheat")
     parsers_list.add_argument("--undetected", action='store_true', help="Cheat is detected")
     # TODO: more filters
+
+    parsers_delete = subparsers.add_parser("delete",
+                                        add_help=False,
+                                        description="Delete a cheat or version",
+                                        help="Delete a cheat or version")
+    parsers_delete.add_argument("id", type=id_validator, help="Identifier for the cheat")
+    parsers_delete.add_argument("--version", type=version_validator, help="Identifier for this version of the cheat (e.g. v1)")
+    parsers_delete.add_argument("--force", action='store_true', help="Force the deletion")
 
     args = parser.parse_args()
 
@@ -81,6 +91,10 @@ def main():
         update(args)
     elif args.actions == "comment":
         comment(args)
+    elif args.actions == "list":
+        search(args)
+    elif args.actions == "delete":
+        delete(args)
 
 if __name__ == "__main__":
     main()
