@@ -1,7 +1,7 @@
 import os
 import shutil
 
-editors = {"posix": ["nano", "vim"], "nt": ["notepad.exe"]}
+editors = {"posix": ["nano", "vim", "mimeopen -d"], "nt": ["notepad.exe"]}
 
 
 class Editor:
@@ -17,6 +17,7 @@ class Editor:
         # run first available editor
         for editor in self.editors:
             if shutil.which(editor):
+                # os command injection is out of scope for this project
                 os.system("{} {}".format(editor, path))
                 break
         else:

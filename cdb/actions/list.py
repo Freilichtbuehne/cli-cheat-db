@@ -12,7 +12,9 @@ def list_cheats(args: any) -> None:
         cp = CheatProperty()
         cp.load(cheat, properties)
 
-        print(colorize(f"[{cp.id}] ", Color.CYAN)  + (cp.properties["description"] or ""))
+        print(
+            colorize(f"[{cp.id}] ", Color.CYAN) + (cp.properties["description"] or "") + (f" {cp.properties['url']}" if cp.properties["url"] else "")
+        )
 
         # print all versions
         for version in fs.get_all_versions(cheat):
@@ -27,7 +29,6 @@ def list_cheats(args: any) -> None:
                 + f" Filetype: {vp.properties['filetype']}"
                 + f" ({colorize('detected', Color.GREEN) if detected else colorize('undetected', Color.RED)})"
             )
-        # get all versions
 
 
 def list_versions(args: any) -> None:

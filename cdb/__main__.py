@@ -12,13 +12,31 @@ def main():
     version_validator = ReValidator(r"^[a-zA-Z0-9_-]+$")
     id_validator = ReValidator(r"^[a-zA-Z0-9_-]+$")
 
-    parser = argparse.ArgumentParser(description="Store and manage your cheats locally via CLI")
+    parser = argparse.ArgumentParser(
+        description="Store and manage your cheats locally via CLI",
+        epilog="""
+Examples:
+  Create a new cheat:
+    ./cdb.py new <name>
+    ./cdb.py new <name> --url "https://..." --description "this cheat is bad"
+
+  Add a sample (version) to a cheat:
+    ./cdb.py add <name> <version> <folder_or_file>
+    ./cdb.py add <name> <version> <folder_or_file> --undetected --free --arch 32 --filetype dll
+
+  Update a sample (version) of a cheat:
+    ./cdb.py update <name> <version> --detected
+
+  Comment on a sample (version) of a cheat (will open an editor to write the comment):
+    ./cdb.py comment <name> <version>
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
     parser.add_argument("-v", "--verbose",  action='store_true', help="Increase output verbosity")
 
     subparsers = parser.add_subparsers(title="actions", dest='actions')
     parser_new = subparsers.add_parser("new",
-                                        add_help=False,
                                         description="Creates a new cheat",
                                         help="When created, samples of this cheat can be added using 'add'")
     parser_new.add_argument("id", type=id_validator, help="Identifier for the cheat")
@@ -27,7 +45,6 @@ def main():
 
 
     parser_new = subparsers.add_parser("add",
-                                        add_help=False,
                                         description="Add a new sample to a cheat",
                                         help="The cheat must be first defined with the 'new' action")
     parser_new.add_argument("id", type=id_validator, help="Identifier for the cheat")
@@ -43,7 +60,6 @@ def main():
     parser_new.add_argument("--url", type=str, help="URL to this sample")
 
     parser_update = subparsers.add_parser("update",
-                                        add_help=False,
                                         description="The update parser",
                                         help="Update specific information of a cheat")
     parser_update.add_argument("id", type=id_validator, help="Identifier for the cheat")
@@ -58,7 +74,6 @@ def main():
     parser_update.add_argument("--free", action='store_true', help="Cheats that are free")
 
     parser_comment = subparsers.add_parser("comment",
-                                        add_help=False,
                                         description="Add a comment to a sample",
                                         help="Add a comment to a sample")
     parser_comment.add_argument("id", type=id_validator, help="Identifier for the cheat")
@@ -66,15 +81,18 @@ def main():
 
 
     parsers_list = subparsers.add_parser("list",
-                                        add_help=False,
                                         description="List all cheats",
                                         help="List all cheats")
     parsers_list.add_argument("--id", type=id_validator, help="Identifier for the cheat")
     parsers_list.add_argument("--undetected", action='store_true', help="Cheat is detected")
     # TODO: more filters
 
+    #parsers_info = subparsers.add_parser("info",
+    #                                    description="Get information about a cheat",
+    #                                    help="Get information about a cheat")
+    #parsers_info.add_argument("id", type=id_validator, help="Identifier for the cheat")
+
     parsers_delete = subparsers.add_parser("delete",
-                                        add_help=False,
                                         description="Delete a cheat or version",
                                         help="Delete a cheat or version")
     parsers_delete.add_argument("id", type=id_validator, help="Identifier for the cheat")

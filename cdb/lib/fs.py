@@ -56,6 +56,14 @@ class FileSystem:
         return os.listdir(self.root)
 
     def get_all_versions(self, id: str) -> list:
+        # check if cheat exists
+        if not os.path.exists(self.cheat_dir.format(id)):
+            raise FileNotFoundError("Cheat {} not found".format(id))
+
+        # check if versions directory exists
+        if not os.path.exists(self.cheat_version_dir.format(id)):
+            return []
+
         return os.listdir(self.cheat_version_dir.format(id))
 
     def load_cheat_properties(self, id: str) -> any:
