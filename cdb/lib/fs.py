@@ -136,3 +136,6 @@ class FileSystem:
         if not os.path.exists(version_dir):
             raise FileNotFoundError("Cheat {} version {} not found".format(id, version))
         shutil.rmtree(version_dir)
+
+    def is_dir(self, path: str) -> bool:
+        return os.path.isdir(path)

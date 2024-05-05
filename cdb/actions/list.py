@@ -47,7 +47,7 @@ def list_versions(args: any) -> None:
 
 
 def search(args: any) -> None:
-    if args.id:
+    if id in args and args.id:
         list_versions(args)
     else:
         list_cheats(args)

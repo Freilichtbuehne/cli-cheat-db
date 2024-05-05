@@ -50,7 +50,7 @@ Examples:
     parser_new.add_argument("id", type=id_validator, help="Identifier for the cheat")
     parser_new.add_argument("version", type=version_validator, help="Identifier for this version of the cheat (e.g. v1)")
     parser_new.add_argument("path", type=str, help="Path to the file or directory to add")
-    parser_new.add_argument("--filetype", required=True, choices = [ "lua", "dll", "exe" ], default = None, help="File type of the cheat")
+    parser_new.add_argument("--filetype", choices = [ "lua", "dll", "exe", "source" ], default = None, help="File type of the cheat")
     parser_new.add_argument("--arch", choices = [ "64", "32", "any" ], default = "any", help="Architecture of the cheat")
     parser_new.add_argument("--paid", action='store_true', help="Cheats that require a subscription or payment")
     parser_new.add_argument("--free", action='store_true', help="Cheats that are free")
@@ -68,7 +68,7 @@ Examples:
     parser_update.add_argument("--description", type=str, help="Description of the cheat")
     parser_update.add_argument("--undetected", action='store_true', help="Cheat is detected")
     parser_update.add_argument("--detected", action='store_true', help="Cheat is undetected")
-    parser_update.add_argument("--filetype", choices = [ "lua", "dll", "exe" ], default = None, help="File type of the cheat")
+    parser_update.add_argument("--filetype", choices = [ "lua", "dll", "exe", "source" ], default = None, help="File type of the cheat")
     parser_update.add_argument("--arch", choices = [ "64", "32", "any" ], default = "any", help="Architecture of the cheat")
     parser_update.add_argument("--paid", action='store_true', help="Cheats that require a subscription or payment")
     parser_update.add_argument("--free", action='store_true', help="Cheats that are free")
@@ -113,6 +113,8 @@ Examples:
         search(args)
     elif args.actions == "delete":
         delete(args)
+    else:
+        search(args)
 
 if __name__ == "__main__":
     main()
