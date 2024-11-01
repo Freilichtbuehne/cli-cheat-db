@@ -1,7 +1,8 @@
 import os
 import json
 import shutil
-from cdb.lib.properties import CheatProperty, VersionProperty
+from platformdirs import user_data_dir
+from cdb.lib.properties import CheatProperty, VersionProperty, colorize, Color
 
 """
 Direcory structure:
@@ -23,10 +24,15 @@ Direcory structure:
             ...
 """
 
+def confirm_directory_creation(dir) -> bool:
+    response = input(
+        colorize(f"The directory {dir} does not exist. Would you like to create it? (y/n): ", Color.CYAN)
+    ).strip().lower()
+    return response == "y"
 
 class FileSystem:
     def __init__(self) -> None:
-        self.root = "data/"
+        self.root = user_data_dir("cli-cheat-db") + "/data/"
         self.cheat_dir = self.root + "{}"
         self.cheat_properties = self.root + "{}/properties.json"
         self.cheat_version_properties = self.root + "{}/versions/{}/properties.json"
@@ -36,7 +42,11 @@ class FileSystem:
         self.cheat_version_comments = self.root + "{}/versions/{}/comments.txt"
         # check if structure exists
         if not os.path.exists(self.root):
-            os.makedirs(self.root)
+            if confirm_directory_creation(self.root):
+                os.makedirs(self.root)
+            else:
+                print("Directory creation aborted. Exiting program.")
+                exit()
 
     def get_comment_path(self, id: str, version: str) -> str:
         # check if cheat exists
