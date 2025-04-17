@@ -3,7 +3,19 @@ Simple CLI tool to assist creating cheat detections
 
 # Installation
 
-`git clone https://github.com/Freilichtbuehne/cli-cheat-db.git`
+```
+git clone https://github.com/Freilichtbuehne/cli-cheat-db.git`
+cd cli-cheat-db
+
+# Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Edit config.yaml
+cp config/config.yaml.example config/config.yaml
+nano config/config.yaml
+```
 
 # Usage
 
