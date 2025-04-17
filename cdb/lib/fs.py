@@ -11,6 +11,7 @@ Direcory structure:
     data/
         cheat_id_1/
             properties.json
+            comments.txt
             versions/
                 version_id_1/
                     properties.json
@@ -34,6 +35,7 @@ class FileSystem:
     def __init__(self) -> None:
         self.root = user_data_dir("cli-cheat-db") + "/data/"
         self.cheat_dir = self.root + "{}"
+        self.cheat_comments = self.root + "{}/comments.txt"
         self.cheat_properties = self.root + "{}/properties.json"
         self.cheat_version_properties = self.root + "{}/versions/{}/properties.json"
         self.cheat_version = self.root + "{}/versions/{}"
@@ -48,14 +50,19 @@ class FileSystem:
                 print("Directory creation aborted. Exiting program.")
                 exit()
 
-    def get_comment_path(self, id: str, version: str) -> str:
+    def get_comment_path(self, id: str, version: str = None) -> str:
         # check if cheat exists
         if not os.path.exists(self.cheat_dir.format(id)):
             raise FileNotFoundError("Cheat {} not found".format(id))
+
         # check if version exists
-        if not os.path.exists(self.cheat_version.format(id, version)):
+        if version and not os.path.exists(self.cheat_version.format(id, version)):
             raise FileNotFoundError("Cheat {} version {} not found".format(id, version))
-        return self.cheat_version_comments.format(id, version)
+
+        if version is None:
+            return self.cheat_comments.format(id)
+        else:
+           return self.cheat_version_comments.format(id, version)
 
     def get_properties_path(self, id: str, version: str = None) -> str:
         if version is None:

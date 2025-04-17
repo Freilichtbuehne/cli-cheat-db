@@ -80,10 +80,12 @@ def open_url(param: str) -> None:
     print(f"Opening URL: {colorize(param, Color.CYAN)}\n")
     webbrowser.open(param)
 
-def analyze(method, id, version=None) -> None:
+def analyze(args: any) -> None:
     """
     Analyze a cheat using the specified method.
     """
+
+    method, id, version = args.method, args.id, args.version
 
     # check if method is valid
     chosen_method = next((m for m in config["analyze"] if m["name"] == method), None)

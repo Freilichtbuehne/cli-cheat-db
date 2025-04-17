@@ -29,8 +29,8 @@ Examples:
   Update a sample (version) of a cheat:
     ./cdb.py update <name> <version> --detected
 
-  Comment on a sample (version) of a cheat (will open an editor to write the comment):
-    ./cdb.py comment <name> <version>
+  Comment on a sample of a cheat (will open an editor to write the comment):
+    ./cdb.py comment <name> [<version>]
 
   Analyze a cheat:
     ./cdb.py analyze <method> <name> [<version>]
@@ -84,7 +84,7 @@ Examples:
                                         description="Add a comment to a sample",
                                         help="Add a comment to a sample")
     parser_comment.add_argument("id", type=id_validator, help="Identifier for the cheat")
-    parser_comment.add_argument("version", type=version_validator, help="Identifier for this version of the cheat")
+    parser_comment.add_argument("--version", type=version_validator, help="Identifier for this version of the cheat")
 
 
     parsers_list = subparsers.add_parser("list",
@@ -98,7 +98,7 @@ Examples:
                                         help="Analyze a cheat. Edit avaliable methods in config.yaml")
     parsers_list.add_argument("method", choices=[o["name"] for o in config["analyze"]], help="Method to use for the analysis")
     parsers_list.add_argument("id", type=str, help="Identifier for the cheat")
-    parsers_list.add_argument("--version", type=str, default = None, help="Identifier for this version of the cheat (e.g. v1)")
+    parsers_list.add_argument("--version", type=version_validator, default=None, help="Identifier for this version of the cheat (e.g. v1)")
 
     #parsers_info = subparsers.add_parser("info",
     #                                    description="Get information about a cheat",
@@ -127,7 +127,7 @@ Examples:
     elif args.actions == "delete":
         delete(args)
     elif args.actions == "analyze":
-        analyze(args.method, args.id, args.version)
+        analyze(args)
     else:
         search(args)
 
