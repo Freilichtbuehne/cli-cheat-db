@@ -1,0 +1,25 @@
+# Configure all command to analyze files and directories
+analyze:
+  - name: browse
+    type: CMD
+    requires: ["dir"]
+    param: "/usr/bin/nautilus {dir}"
+
+  - name: code
+    type: CMD
+    requires: ["dir"]
+    param: "/usr/bin/code {dir}"
+
+  - name: files
+    type: CMD
+    requires: ["dir"]
+    param: "cd {dir} && find . -type f -printf \"%P\n\" | while read -r file; do sha1sum \"$file\" | awk '{{print $1}}'; file \"$file\"; done | awk 'NR%2{{printf \"%s \", $0; next}}1' | column -t"
+  - name: strings
+    type: CMD
+    requires: ["file"]
+    param: "/usr/bin/strings {file}"
+
+  - name: virustotal
+    type: URL
+    requires: ["hash"]
+    param: "https://www.virustotal.com/gui/file/{hash}"

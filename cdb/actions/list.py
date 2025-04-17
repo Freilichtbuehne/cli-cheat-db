@@ -25,9 +25,9 @@ def list_cheats(args: any) -> None:
             print(
                 "\t"
                 + colorize(f"[{vp.version}] ", Color.GREEN if detected else Color.RED)
-                + (vp.properties["description"] or "")
-                + f" Filetype: {vp.properties['filetype']}"
-                + f" ({colorize('detected', Color.GREEN) if detected else colorize('undetected', Color.RED)})"
+                + "\t" + (vp.properties["description"] or "")
+                + f"\tFiletype: {vp.properties['filetype']}"
+                + f"\t({colorize('detected', Color.GREEN) if detected else colorize('undetected', Color.RED)})"
             )
 
 
@@ -40,14 +40,16 @@ def list_versions(args: any) -> None:
         detected = vp.properties["detected"]
         print(
             colorize(f"[{vp.version}] ", Color.GREEN if detected else Color.RED)
-            + (vp.properties["description"] or "")
-            + f" Filetype: {vp.properties['filetype']}"
-            + f" ({colorize('detected', Color.GREEN) if detected else colorize('undetected', Color.RED)})"
+            + "\t" + (vp.properties["description"] or "")
+            + f"\tFiletype: {vp.properties['filetype']}"
+            + "\t" + (f"Arch: {vp.properties['arch']}" if vp.properties["arch"] != 'any' else "")
+            + f"\tPaid: {vp.properties['paid']}"
+            + f"\t({colorize('detected', Color.GREEN) if detected else colorize('undetected', Color.RED)})"
         )
 
 
 def search(args: any) -> None:
-    if id in args and args.id:
+    if 'id' in args and args.id:
         list_versions(args)
     else:
         list_cheats(args)

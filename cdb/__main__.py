@@ -5,10 +5,12 @@ from cdb.actions.update import update
 from cdb.actions.comment import comment
 from cdb.actions.list import search
 from cdb.actions.delete import delete
-
+from cdb.actions.analyze import analyze
+from cdb.lib.config import load_config
 from cdb.lib.validators import ReValidator
 
 def main():
+    config = load_config()
     version_validator = ReValidator(r"^[a-zA-Z0-9_-]+$")
     id_validator = ReValidator(r"^[a-zA-Z0-9_-]+$")
 
@@ -29,6 +31,11 @@ Examples:
 
   Comment on a sample (version) of a cheat (will open an editor to write the comment):
     ./cdb.py comment <name> <version>
+
+  Analyze a cheat:
+    ./cdb.py analyze <method> <name> [<version>]
+    ./cdb.py analyze virustotal <name> --version <version>
+    ./cdb.py analyze browse <name>
 """,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -85,7 +92,13 @@ Examples:
                                         help="List all cheats")
     parsers_list.add_argument("--id", type=id_validator, help="Identifier for the cheat")
     parsers_list.add_argument("--undetected", action='store_true', help="Cheat is detected")
-    # TODO: more filters
+
+    parsers_list = subparsers.add_parser("analyze",
+                                        description="Analyze a cheat",
+                                        help="Analyze a cheat. Edit avaliable methods in config.yaml")
+    parsers_list.add_argument("method", choices=[o["name"] for o in config["analyze"]], help="Method to use for the analysis")
+    parsers_list.add_argument("id", type=str, help="Identifier for the cheat")
+    parsers_list.add_argument("--version", type=str, default = None, help="Identifier for this version of the cheat (e.g. v1)")
 
     #parsers_info = subparsers.add_parser("info",
     #                                    description="Get information about a cheat",
@@ -113,6 +126,8 @@ Examples:
         search(args)
     elif args.actions == "delete":
         delete(args)
+    elif args.actions == "analyze":
+        analyze(args.method, args.id, args.version)
     else:
         search(args)
 

@@ -62,6 +62,11 @@ class FileSystem:
             return self.cheat_properties.format(id)
         return self.cheat_version_properties.format(id, version)
 
+    def get_directory(self, id: str, version: str = None, versions=False) -> str:
+        if version is None:
+            return self.cheat_version_dir.format(id)
+        return self.cheat_version.format(id, version)
+
     def get_all_cheats(self) -> list:
         return os.listdir(self.root)
 
@@ -82,6 +87,10 @@ class FileSystem:
             raise FileNotFoundError("Properties file for cheat {} not found".format(id))
         with open(property_file, "r") as f:
             return json.load(f)
+        
+    def cheat_exists(self, id: str, version: str = None) -> bool:
+        directory = self.get_directory(id, version)
+        return os.path.exists(directory)
 
     def load_cheat_version_properties(self, id: str, version: str) -> any:
         property_file = self.cheat_version_properties.format(id, version)
