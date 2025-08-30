@@ -69,10 +69,11 @@ class FileSystem:
             return self.cheat_properties.format(id)
         return self.cheat_version_properties.format(id, version)
 
-    def get_directory(self, id: str, version: str = None, versions=False) -> str:
+    def get_directory(self, id: str, version: str = None) -> str:
         if version is None:
             return self.cheat_version_dir.format(id)
-        return self.cheat_version.format(id, version)
+
+        return self.cheat_version_sample.format(id, version)
 
     def get_all_cheats(self) -> list:
         return os.listdir(self.root)

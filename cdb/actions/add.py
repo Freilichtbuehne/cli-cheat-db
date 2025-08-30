@@ -19,7 +19,7 @@ def add(args: any) -> None:
         elif args.path.endswith(".exe"):
             args.filetype = "exe"
     
-    if not args.filetype:
+    if not is_dir and not args.filetype:
         raise ValueError("File type not specified, failed to auto-detect")
 
     properties = VersionProperty(args)
